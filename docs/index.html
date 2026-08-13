@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CQ2R7754QS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-CQ2R7754QS');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="S2R is a closed-loop framework for physics-grounded reflection video synthesis, diffusion-based video dereflection, and benchmark evaluation.">
+  <meta name="keywords" content="video reflection removal, video dereflection, reflection synthesis, video diffusion, physics-grounded augmentation, AAAI 2027">
+  <meta name="author" content="Zepeng Wang, Jiagao Hu, Fuhao Li, Yuxuan Chen, Fei Wang, Daiguo Zhou">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="From Synthesis to Removal">
+  <meta property="og:description" content="Physics-Grounded Reflection Simulation and Diffusion-Based Video Dereflection">
+  <meta property="og:image" content="static/images/fig1_overview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="From Synthesis to Removal">
+  <meta name="twitter:description" content="Physics-Grounded Reflection Simulation and Diffusion-Based Video Dereflection">
+  <meta name="twitter:image" content="static/images/fig1_overview.jpg">
+
+  <meta name="citation_title" content="From Synthesis to Removal: Physics-Grounded Reflection Simulation and Diffusion-Based Video Dereflection">
+  <meta name="citation_author" content="Zepeng Wang">
+  <meta name="citation_author" content="Jiagao Hu">
+  <meta name="citation_author" content="Fuhao Li">
+  <meta name="citation_author" content="Yuxuan Chen">
+  <meta name="citation_author" content="Fei Wang">
+  <meta name="citation_author" content="Daiguo Zhou">
+  <meta name="citation_publication_date" content="2026/08">
+  <meta name="citation_journal_title" content="arXiv">
+
+  <title>From Synthesis to Removal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <ul class="nav-list">
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#synthesis">S2R-Synthesis</a></li>
+      <li><a href="#removal">S2R-Removal</a></li>
+      <li><a href="#benchmark">S2R-Benchmark</a></li>
+      <li><a href="#citation">Citation</a></li>
+    </ul>
+  </nav>
+
+  <header class="paper-hero" id="top">
+    <div class="container hero-container">
+      <h1>From Synthesis to Removal:<br>Physics-Grounded Reflection Simulation and Diffusion-Based Video Dereflection</h1>
+      <p class="authors">
+        <span>Zepeng Wang<sup>*</sup>,</span>
+        <span>Jiagao Hu<sup>*</sup>,</span>
+        <span>Fuhao Li<sup>*</sup>,</span>
+        <span>Yuxuan Chen,</span>
+        <span>Fei Wang,</span>
+        <span>Daiguo Zhou</span>
+      </p>
+      <p class="equal-note"><sup>*</sup> Equal contribution</p>
+      <p class="affiliation">MiLM Plus, Xiaomi Inc.</p>
+
+      <div class="project-links" aria-label="Project resources">
+        <a class="project-button" href="https://arxiv.org/abs/2608.11562">arXiv</a>
+        <span class="project-button" aria-disabled="true">Code(coming soon)</span>
+      </div>
+
+      <div class="demo-block" id="demo">
+        <video controls playsinline preload="auto" poster="static/images/fig1_overview.jpg" aria-label="S2R project demonstration video">
+          <source src="static/videos/demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section section-alt" id="abstract">
+      <div class="container">
+        <h2>Abstract</h2>
+        <div class="abstract-text">
+          <p>Videos captured through glass often contain reflections that degrade visual quality and interfere with downstream vision tasks. Although single-image reflection removal has been extensively studied, video reflection removal remains largely underexplored due to the lack of paired video data, temporally coherent removal models, and dedicated evaluation benchmarks. We present <strong>S2R</strong>, a closed-loop framework that unifies physics-grounded reflection simulation, diffusion-based video dereflection, and benchmark evaluation. <strong>S2R-Synthesis</strong> generates realistic paired videos through structure-space Physics-Grounded Augmentation and a trained video diffusion renderer. <strong>S2R-Removal</strong> adapts a pretrained video diffusion prior through reflection-aware latent adaptation and one-step pixel-geometric refinement. <strong>S2R-Benchmark</strong> supports both full-reference evaluation and real-world human perceptual assessment.</p>
+        </div>
+
+        <figure class="paper-figure overview-figure">
+          <img src="static/images/fig1_overview.jpg" alt="Overview of controllable reflection synthesis and temporally coherent reflection removal">
+          <figcaption><strong>Fig 1.</strong> Overview of the reflection synthesis and removal pipeline. Left: Controllable synthesis across glass roughness, reflectance, and thickness. Right: Qualitative removal results on in-the-wild videos.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="synthesis">
+      <div class="container">
+        <h2>S2R-Synthesis</h2>
+        <p class="section-intro">S2R-Synthesis decouples reflection structure from appearance. A structure-guided video renderer learns realistic reflection appearance from FLUX-generated pseudo videos, while Physics-Grounded Augmentation controls reflection geometry and major glass properties in structure space.</p>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig2_synthesis.jpg" alt="Overview of the S2R-Synthesis pipeline">
+          <figcaption><strong>Figure 2.</strong> Overview of S2R-Synthesis. Left: limitations of existing strategies motivate our S2R-Synthesis. Stage A trains a structure-guided reflection renderer from FLUX-generated pseudo reflection videos; Stage B fuses two clean videos’ conditions through Physics-Grounded Augmentation (PGA) and renders paired reflected videos. Right: representative PGA operations.</figcaption>
+        </figure>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig3_synthesis_ue5.jpg" alt="Comparison between S2R-Synthesis and a UE5-based reflection synthesis pipeline">
+          <figcaption><strong>Fig 3.</strong> Comparison of reflection-synthesis trends between S2R-Synthesis (with PGA) and a UE5-based pipeline under controlled variation of three glass properties (roughness, reflectance, thickness).</figcaption>
+        </figure>
+
+        <div class="synthesis-table-block">
+          <div class="table-wrapper synthesis-table-wrapper" tabindex="0" aria-label="Effectiveness of the S2R synthesis pipeline">
+            <table class="synthesis-table">
+              <colgroup>
+                <col class="synthesis-column" span="6">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Setting</th>
+                  <th scope="col">PSNR ↑</th>
+                  <th scope="col">ΔPSNR</th>
+                  <th scope="col">SSIM ↑</th>
+                  <th scope="col">ΔSSIM</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-group-row"><th colspan="6" scope="colgroup">A: Synthetic data source</th></tr>
+                <tr><th scope="row">A1</th><td>Base only</td><td>28.05</td><td>+0.00</td><td>0.9465</td><td>+0.0000</td></tr>
+                <tr><th scope="row">A2</th><td>+ Trad.</td><td>31.98</td><td>+3.93</td><td>0.9619</td><td>+0.0154</td></tr>
+                <tr><th scope="row">A3</th><td>+ Ours(P)</td><td>32.35</td><td>+4.30</td><td>0.9643</td><td>+0.0178</td></tr>
+                <tr><th scope="row">A4</th><td>+ Trad. + Ours(P)</td><td><strong>33.26</strong></td><td><strong>+5.21</strong></td><td><strong>0.9679</strong></td><td><strong>+0.0214</strong></td></tr>
+                <tr class="table-group-row"><th colspan="6" scope="colgroup">B: PGA variants</th></tr>
+                <tr><th scope="row">B1</th><td>P</td><td>32.35</td><td>+0.00</td><td>0.9643</td><td>+0.0000</td></tr>
+                <tr><th scope="row">B2</th><td>P + St</td><td>32.81</td><td>+0.46</td><td>0.9670</td><td>+0.0027</td></tr>
+                <tr><th scope="row">B3</th><td>P + St + Pa</td><td>33.62</td><td>+1.27</td><td>0.9691</td><td>+0.0048</td></tr>
+                <tr><th scope="row">B4</th><td>P + St + Pa + Re</td><td>33.58</td><td>+1.23</td><td>0.9695</td><td>+0.0052</td></tr>
+                <tr><th scope="row">B5</th><td>P + St + Pa + Re + Th</td><td>33.70</td><td>+1.35</td><td>0.9697</td><td>+0.0054</td></tr>
+                <tr><th scope="row">B6</th><td>Full PGA</td><td><strong>34.13</strong></td><td><strong>+1.78</strong></td><td><strong>0.9704</strong></td><td><strong>+0.0061</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption"><strong>Table 1.</strong> Effectiveness of our synthesis pipeline. RDNet is trained on the OpenRR-1k train split and evaluated on its test split. Trad. = traditional synthesis. P/St/Pa/Re/Th/Ro = Planar/Static/Partial/Reflectance/Thickness/Roughness. Δ is relative to the first row of each panel.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="removal">
+      <div class="container">
+        <h2>S2R-Removal</h2>
+        <p class="section-intro">S2R-Removal uses two-stage adaptation: Stage I learns reflection-aware latent features with residual-derived intensity supervision, and Stage II performs one-step pixel-geometric refinement with reconstruction, structural, and depth consistency losses.</p>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig4_removal.jpg" alt="Overview of the two-stage S2R-Removal pipeline">
+          <figcaption><strong>Fig 4.</strong> Overview of S2R-Removal.</figcaption>
+        </figure>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig5_prior_video.jpg" alt="Comparison with prior video reflection removal methods">
+          <figcaption><strong>Fig 5.</strong> Qualitative comparison with prior video reflection removal methods.</figcaption>
+        </figure>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig6_kling.jpg" alt="Comparison with the general-purpose video editing model Kling O1">
+          <figcaption><strong>Fig 6.</strong> Qualitative comparison with the general-purpose video editing model Kling O1 on three representative cases.</figcaption>
+        </figure>
+
+        <div class="removal-table-block">
+          <div class="table-wrapper removal-table-wrapper" tabindex="0" aria-label="Ablation study of S2R-Removal on S2R-Ref">
+            <table class="removal-table">
+              <colgroup>
+                <col class="removal-id-column">
+                <col class="removal-loss-column" span="5">
+                <col class="removal-metric-column" span="2">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th rowspan="2" scope="col">ID</th>
+                  <th colspan="2" scope="colgroup">Stage-I</th>
+                  <th colspan="3" scope="colgroup">Stage-II</th>
+                  <th rowspan="2" scope="col">PSNR ↑</th>
+                  <th rowspan="2" scope="col">SSIM ↑</th>
+                </tr>
+                <tr>
+                  <th scope="col"><span class="loss-symbol">ℒ<sub>diff</sub></span></th>
+                  <th scope="col"><span class="loss-symbol">ℒ<sub>int</sub></span></th>
+                  <th scope="col"><span class="loss-symbol">ℒ<sub>rec</sub></span></th>
+                  <th scope="col"><span class="loss-symbol">ℒ<sub>ssim</sub></span></th>
+                  <th scope="col"><span class="loss-symbol">ℒ<sub>depth</sub></span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">1</th><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>27.00</td><td>0.8348</td></tr>
+                <tr><th scope="row">2</th><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>27.71</td><td>0.8430</td></tr>
+                <tr><th scope="row">3</th><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>28.21</td><td>0.8513</td></tr>
+                <tr><th scope="row">4</th><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>28.55</td><td>0.8566</td></tr>
+                <tr><th scope="row">5</th><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td><strong>28.84</strong></td><td><strong>0.8594</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption"><strong>Table 2.</strong> Ablation study of S2R-Removal on S2R-Ref. We progressively enable the Stage-I latent adaptation losses and the Stage-II pixel-geometric refinement losses.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="benchmark">
+      <div class="container">
+        <h2>S2R-Benchmark</h2>
+        <p class="section-intro">S2R-Benchmark is the first benchmark dedicated to video reflection removal. It combines paired evaluation with real-world perceptual assessment to measure reconstruction fidelity, temporal consistency, reflection removal quality, and transmission preservation.</p>
+
+        <div class="benchmark-grid">
+          <article class="benchmark-card">
+            <h3>S2R-Ref</h3>
+            <strong>60 paired videos</strong>
+            <p>Reflected and clean sequences with identical virtual camera motion for full-reference PSNR, SSIM, and temporal consistency evaluation.</p>
+          </article>
+          <article class="benchmark-card">
+            <h3>S2R-Real</h3>
+            <strong>50 real-world videos</strong>
+            <p>In-the-wild reflections spanning diverse glass materials, lighting, reflection strengths, and camera motions for human perceptual evaluation.</p>
+          </article>
+        </div>
+
+        <div class="benchmark-table-block">
+          <div class="table-wrapper benchmark-table-wrapper" tabindex="0" aria-label="Video benchmark and efficiency comparison">
+            <table class="benchmark-table benchmark-video-table">
+              <thead>
+                <tr>
+                  <th rowspan="3" scope="col">Method</th>
+                  <th colspan="6" scope="colgroup">Video Bench</th>
+                  <th scope="col">Efficiency</th>
+                </tr>
+                <tr>
+                  <th colspan="3" scope="colgroup">S2R-Ref (60)</th>
+                  <th colspan="3" scope="colgroup">S2R-Real (50)</th>
+                  <th scope="col">832 × 480</th>
+                </tr>
+                <tr>
+                  <th scope="col">PSNR ↑</th><th scope="col">SSIM ↑</th><th scope="col">TC ↑</th>
+                  <th scope="col">Removal ↑</th><th scope="col">Preserv. ↑</th><th scope="col">TC ↑</th>
+                  <th scope="col">ms/frame ↓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">DSRNet (ICCV'23)</th>
+                  <td>23.78</td><td>0.857</td><td>0.9546</td><td>0.163</td><td>0.785</td><td>0.9790</td><td>329.23</td>
+                </tr>
+                <tr>
+                  <th scope="row">DSIT (NeurIPS'24)</th>
+                  <td>24.06</td><td><strong>0.870</strong></td><td>0.9585</td><td>0.297</td><td>0.853</td><td>0.9781</td><td>241.05</td>
+                </tr>
+                <tr>
+                  <th scope="row">RDNet (CVPR'25)</th>
+                  <td>24.71</td><td><strong>0.870</strong></td><td>0.9564</td><td>0.175</td><td>0.867</td><td><u>0.9797</u></td><td><u>145.13</u></td>
+                </tr>
+                <tr>
+                  <th scope="row">DAI (AAAI'26)</th>
+                  <td>—</td><td>—</td><td>—</td><td>0.332</td><td><u>0.871</u></td><td>0.9777</td><td>217.27</td>
+                </tr>
+                <tr>
+                  <th scope="row">GenSIRR (CVPR'26)</th>
+                  <td><u>27.04</u></td><td>0.846</td><td><u>0.9648</u></td><td><u>0.654</u></td><td>0.831</td><td>0.9747</td><td>7214.94</td>
+                </tr>
+                <tr class="highlight-row">
+                  <th scope="row">Ours</th>
+                  <td><strong>28.84</strong></td><td><u>0.859</u></td><td><strong>0.9740</strong></td><td><strong>0.787</strong></td><td><strong>0.980</strong></td><td><strong>0.9827</strong></td><td><strong>87.09</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption"><strong>Table 3.</strong> Comparison with state-of-the-art dereflection methods on video benchmark.</p>
+
+          <div class="table-wrapper benchmark-table-wrapper" tabindex="0" aria-label="Image benchmark comparison">
+            <table class="benchmark-table benchmark-image-table">
+              <thead>
+                <tr>
+                  <th rowspan="3" scope="col">Method</th>
+                  <th colspan="8" scope="colgroup">Image Bench</th>
+                </tr>
+                <tr>
+                  <th colspan="2" scope="colgroup">Real (20)</th>
+                  <th colspan="2" scope="colgroup">SIR<sup>2</sup> (454)</th>
+                  <th colspan="2" scope="colgroup">Nature (20)</th>
+                  <th colspan="2" scope="colgroup">Average</th>
+                </tr>
+                <tr>
+                  <th scope="col">PSNR ↑</th><th scope="col">SSIM ↑</th>
+                  <th scope="col">PSNR ↑</th><th scope="col">SSIM ↑</th>
+                  <th scope="col">PSNR ↑</th><th scope="col">SSIM ↑</th>
+                  <th scope="col">PSNR ↑</th><th scope="col">SSIM ↑</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">DSRNet (ICCV'23)</th>
+                  <td>23.91</td><td>0.818</td><td>25.71</td><td>0.906</td><td>25.22</td><td>0.832</td><td>25.62</td><td>0.899</td>
+                </tr>
+                <tr>
+                  <th scope="row">DSIT (NeurIPS'24)</th>
+                  <td>25.22</td><td>0.836</td><td>26.43</td><td>0.911</td><td>26.77</td><td><u>0.847</u></td><td>26.40</td><td>0.905</td>
+                </tr>
+                <tr>
+                  <th scope="row">RDNet (CVPR'25)</th>
+                  <td>25.71</td><td><u>0.850</u></td><td>26.69</td><td>0.908</td><td>26.31</td><td>0.846</td><td>26.63</td><td>0.903</td>
+                </tr>
+                <tr>
+                  <th scope="row">DAI (AAAI'26)</th>
+                  <td>25.21</td><td>0.841</td><td>27.47</td><td>0.919</td><td>26.81</td><td>0.843</td><td>27.35</td><td>0.913</td>
+                </tr>
+                <tr>
+                  <th scope="row">GenSIRR (CVPR'26)</th>
+                  <td><u>27.58</u></td><td><strong>0.881</strong></td><td><u>28.08</u></td><td><strong>0.937</strong></td><td><u>27.34</u></td><td>0.840</td><td><u>28.03</u></td><td><strong>0.931</strong></td>
+                </tr>
+                <tr class="highlight-row">
+                  <th scope="row">Ours</th>
+                  <td><strong>28.23</strong></td><td><strong>0.881</strong></td><td><strong>28.83</strong></td><td><u>0.925</u></td><td><strong>27.89</strong></td><td><strong>0.883</strong></td><td><strong>28.77</strong></td><td><u>0.921</u></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-caption"><strong>Table 4.</strong> Comparison with state-of-the-art dereflection methods on image benchmarks.</p>
+        </div>
+
+        <h3 class="comparison-heading">Qualitative Comparison</h3>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig7_s2r_ref.jpg" alt="Qualitative comparison on the S2R-Ref benchmark">
+          <figcaption><strong>Fig 7.</strong> Qualitative comparison on S2R-Ref.</figcaption>
+        </figure>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig8_s2r_real.jpg" alt="Qualitative comparison on the S2R-Real benchmark">
+          <figcaption><strong>Fig 8.</strong> Qualitative comparison on S2R-Real.</figcaption>
+        </figure>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig9_image_benchmarks.jpg" alt="Qualitative comparison on the Real, SIR squared, and Nature image benchmarks">
+          <figcaption><strong>Fig 9.</strong> Qualitative comparison on the Real, SIR², and Nature image benchmarks.</figcaption>
+        </figure>
+
+        <figure class="paper-figure borderless-figure">
+          <img src="static/images/fig10_stage1_stage2.jpg" alt="Qualitative comparison between Stage I and Stage II of S2R-Removal">
+          <figcaption><strong>Fig 10.</strong> Qualitative comparison between Stage I and Stage II of S2R-Removal.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="citation">
+      <div class="container citation-container">
+        <h2>Citation</h2>
+        <pre id="bibtex"><code>@article{wang2026s2r,
+  title   = {From Synthesis to Removal: Physics-Grounded Reflection Simulation and Diffusion-Based Video Dereflection},
+  author  = {Wang, Zepeng and Hu, Jiagao and Li, Fuhao and Chen, Yuxuan and Wang, Fei and Zhou, Daiguo},
+  journal = {arXiv preprint arXiv:2608.11562},
+  year    = {2026}
+}</code></pre>
+
+        <p class="view-counter">visitors: <span id="visitor-count" aria-live="polite">—</span> · views: <span id="view-count" aria-live="polite">—</span></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="static/js/index.js"></script>
+</body>
+</html>
